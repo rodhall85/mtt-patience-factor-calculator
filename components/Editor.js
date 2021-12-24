@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import NumberField from './NumberField';
+import DataField from './DataField';
 
 const Level = ({level, sb, bb, ante, levelCost, totalCost, levelChanged}) => {
     const [levelValues, setLevelValues] = useState({sb, bb, ante});
@@ -17,11 +17,11 @@ const Level = ({level, sb, bb, ante, levelCost, totalCost, levelChanged}) => {
     return (
         <div className="flex">
             <div>{level}</div>
-            <NumberField value={levelValues.sb} handleChange={handleChange} name="sb" />
-            <NumberField value={levelValues.bb} handleChange={handleChange} name="bb" />
-            <NumberField value={levelValues.ante} handleChange={handleChange} name="ante" />
-            <NumberField value={levelCost} handleChange={handleChange} name="levelCost" />
-            <NumberField value={totalCost} handleChange={handleChange} name="totalCost" />
+            <DataField value={levelValues.sb} handleChange={handleChange} name="sb" />
+            <DataField value={levelValues.bb} handleChange={handleChange} name="bb" />
+            <DataField value={levelValues.ante} handleChange={handleChange} name="ante" />
+            <DataField value={levelCost} handleChange={handleChange} name="levelCost" />
+            <DataField value={totalCost} handleChange={handleChange} name="totalCost" />
         </div>
     );
 };
@@ -52,8 +52,71 @@ const Editor = ({tournament, setTournament, enrichedTournament}) => {
         console.log('nt', newTournament);
     };
 
+    const DataFieldWithLabel = ({label, value, handleChange, name, type = "text"}) => {
+        const [ vv, setVv ] = useState(value);
+
+        const valueChanged = (e) => {
+            setVv(e.target.value);
+            //handleChange(e);
+        };
+        return (
+            <div className="flex">
+                <div>{label}</div>
+                <DataField
+                    type={type}
+                    value={vv}
+                    handleChange={valueChanged}
+                    handleBlur={() => handleChange(vv)}
+                    name={name} />
+            </div>
+        );
+    };
     return (
         <>
+            <DataFieldWithLabel
+                label="Tournament name: "
+                value={tournament.name}
+                handleChange={(value) => setTournament({...tournament, name: value})}
+                name="tournamentName" />
+
+            <DataFieldWithLabel
+                label="Players per table: "
+                value={tournament.playersPerTable}
+                handleChange={(value) => setTournament({...tournament, playersPerTable: value})}
+                name="playersPerTable" />
+
+            <DataFieldWithLabel
+                type="checkbox"
+                label="Online: "
+                value={tournament.online}
+                handleChange={(value) => setTournament({...tournament, online: value})}
+                name="online" />
+
+            <DataFieldWithLabel
+                type="checkbox"
+                label="Rebuy: "
+                value={tournament.rebuy}
+                handleChange={(value) => setTournament({...tournament, rebuy: value})}
+                name="rebuy" />
+                
+            <DataFieldWithLabel
+                label="Hands per hour: "
+                value={tournament.handsPerHour}
+                handleChange={(value) => setTournament({...tournament, handsPerHour: value})}
+                name="handsPerHour" />
+
+            <DataFieldWithLabel
+                label="Starting stack: "
+                value={tournament.startingStack}
+                handleChange={(value) => setTournament({...tournament, startingStack: value})}
+                name="startingStack" />
+
+            <DataFieldWithLabel
+                label="Minutes per level: "
+                value={tournament.minutesPerLevel}
+                handleChange={(value) => setTournament({...tournament, minutesPerLevel: value})}
+                name="minutesPerLevel" />
+
             { levels && (
                 <>
                     <div className="flex">
